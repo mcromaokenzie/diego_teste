@@ -34,7 +34,6 @@ class ProjectSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "created_at"]
 
     def create(self, validated_data: dict):
-
         techs = validated_data.pop("techs")
 
         new_project = Project.objects.create(**validated_data)
@@ -45,5 +44,22 @@ class ProjectSerializer(serializers.ModelSerializer):
         new_project.save()
 
         serializer = ProjectSerializer(instance=new_project)
+
+        return Response(serializer.data)
+
+    def update(self, instance, validated_data):
+        try:
+            techs = validated_data.pop("techs")
+            for tech in techs:
+                instance.techs.add(tech)
+        except Exception:
+            pass
+
+        for key, value in validated_data.items():
+            setattr(instance, key, value)
+
+        instance.save()
+
+        serializer = ProjectSerializer(instance=instance)
 
         return Response(serializer.data)

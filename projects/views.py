@@ -42,3 +42,33 @@ class ProjectDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProjectSerializer
 
     permission_classes = [IsSuperUser]
+
+    def update(self, request: Request, *args, **kwargs):
+        instance = self.get_object()
+        partial = kwargs.pop("partial", False)
+
+        try:
+            request_techs_data = request.data.pop("techs")
+            tech_list = []
+
+            for tech_id in request_techs_data:
+                try:
+                    find_tech = Tech.objects.get(pk=tech_id)
+                    tech_list.append(find_tech)
+                except Tech.DoesNotExist:
+                    pass
+
+            self.kwargs["techs"] = tech_list
+        except Exception:
+            pass
+
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+
+        return self.perform_update(serializer)
+
+    def perform_update(self, serializer):
+        try:
+            return serializer.save(techs=self.kwargs["techs"])
+        except Exception:
+            return serializer.save()
