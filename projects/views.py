@@ -13,8 +13,6 @@ class ProjectView(generics.ListCreateAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
 
-    permission_classes = [IsSuperUser]
-
     def create(self, request: Request, *args, **kwargs):
         request_techs_data = request.data.pop("techs")
         tech_list = []
@@ -40,8 +38,6 @@ class ProjectView(generics.ListCreateAPIView):
 class ProjectDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
-
-    permission_classes = [IsSuperUser]
 
     def update(self, request: Request, *args, **kwargs):
         instance = self.get_object()

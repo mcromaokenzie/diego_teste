@@ -14,11 +14,7 @@ class TechView(generics.ListCreateAPIView):
     def get_queryset(self):
         return Tech.objects.all()
 
-    permission_classes = [IsSuperUser]
-
 
 class TechDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Tech
     serializer_class = TechSerializer
-
-    permission_classes = [IsSuperUser]
