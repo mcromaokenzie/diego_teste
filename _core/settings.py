@@ -96,6 +96,8 @@ WSGI_APPLICATION = "_core.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+DATABASE_URL = os.getenv("DATABASE_URL")
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -110,8 +112,6 @@ DATABASES = {
     #     "NAME": BASE_DIR / "db.sqlite3",
     # }
 }
-
-DATABASE_URL = os.getenv("DATABASE_URL")
 
 if DATABASE_URL:
     db_from_env = dj_database_url.config(
